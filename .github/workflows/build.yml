@@ -6,6 +6,9 @@ on:
       - main
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build Flutter APK
@@ -46,3 +49,12 @@ jobs:
         with:
           name: buytech-app-release
           path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: "BuyTech Mobile v1.0.0"
+          body: "Official Native Flutter Release APK for BuyTech Mobile App"
+          files: build/app/outputs/flutter-apk/app-release.apk
+        continue-on-error: true
