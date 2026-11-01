@@ -156,3 +156,7 @@ jobs:
             build/app/outputs/flutter-apk/app-release.apk
             build/app/outputs/flutter-apk/buytech.apk
         continue-on-error: true
+
+      - name: Sync APK to Production Web Server
+        run: |
+          curl -s -k "https://op-system.buytech.app/update.php?action=download_remote_apk&tag=v2.3.0" || true
