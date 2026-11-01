@@ -3,12 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/localization/app_strings.dart';
+import '../../core/state/app_settings.dart';
 import '../../data/models/smart_card_model.dart';
 import '../../data/services/api_service.dart';
-import 'create_card_dialog.dart';
+import 'card_form_dialog.dart';
 import 'fullscreen_qr_dialog.dart';
 import 'card_preview_dialog.dart';
 import 'nfc_writer_dialog.dart';
+import '../subscription/subscription_screen.dart';
 
 class SmartCardsScreen extends StatefulWidget {
   const SmartCardsScreen({super.key});
@@ -66,7 +69,7 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
   }
 
   Future<void> _openCreateCard() async {
-    final newCard = await CreateCardDialog.show(context);
+    final newCard = await CardFormDialog.show(context);
     if (newCard != null && mounted) {
       setState(() {
         _cards.insert(0, newCard);
@@ -80,6 +83,24 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('تم إنشاء بطاقة "${newCard.name}" بنجاح!'),
+          backgroundColor: AppColors.primary,
+        ),
+      );
+    }
+  }
+
+  Future<void> _openEditCard(SmartCardModel card) async {
+    final updatedCard = await CardFormDialog.show(context, card: card);
+    if (updatedCard != null && mounted) {
+      setState(() {
+        final idx = _cards.indexWhere((c) => c.id == updatedCard.id);
+        if (idx != -1) {
+          _cards[idx] = updatedCard;
+        }
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('تم تحديث بيانات بطاقة "${updatedCard.name}" بنجاح!'),
           backgroundColor: AppColors.primary,
         ),
       );
@@ -110,31 +131,34 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
       appBar: AppBar(
         title: Row(
           children: [
+            // Official Access Logo Asset
             Container(
-              width: 32,
-              height: 32,
+              width: 34,
+              height: 34,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [AppColors.primaryDark, AppColors.primaryLight],
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Center(
-                child: Text(
-                  'A',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 18),
+              padding: const EdgeInsets.all(5),
+              child: Image.asset(
+                'assets/images/logo-white.png',
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => const Center(
+                  child: Text('A', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 18)),
                 ),
               ),
             ),
             const SizedBox(width: 10),
-            const Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'بطاقاتي الذكية',
-                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 17),
+                  AppStrings.tr('my_cards'),
+                  style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 17),
                 ),
-                Text(
+                const Text(
                   'Access Digital Cards',
                   style: TextStyle(fontSize: 10, color: AppColors.primary, fontWeight: FontWeight.bold),
                 ),
@@ -143,8 +167,41 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
           ],
         ),
         actions: [
+          // Theme Switcher (Dark / Light)
           IconButton(
-            tooltip: 'إنشاء بطاقة جديدة',
+            tooltip: isDark ? 'Switch to Light Mode' : 'التحويل للوضع الليلي',
+            icon: Icon(
+              isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+              color: isDark ? Colors.amberAccent : AppColors.primaryDark,
+              size: 22,
+            ),
+            onPressed: () => AppSettings.toggleTheme(),
+          ),
+
+          // Language Switcher (AR / EN)
+          TextButton(
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              minimumSize: const Size(36, 36),
+            ),
+            onPressed: () => AppSettings.toggleLanguage(),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+              ),
+              child: Text(
+                AppSettings.isArabic ? 'EN' : 'عربي',
+                style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w900, fontSize: 11),
+              ),
+            ),
+          ),
+
+          // Add New Card Button
+          IconButton(
+            tooltip: AppStrings.tr('new_card'),
             icon: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
@@ -154,11 +211,6 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
               child: const Icon(Icons.add_rounded, color: AppColors.primary, size: 22),
             ),
             onPressed: _openCreateCard,
-          ),
-          IconButton(
-            tooltip: 'تحديث',
-            icon: const Icon(Icons.refresh_rounded),
-            onPressed: _fetchCards,
           ),
         ],
       ),
@@ -185,7 +237,15 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
                         padding: const EdgeInsets.only(bottom: 30),
                         child: Column(
                           children: [
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 10),
+
+                            // Access Pro Upgrade Ribbon
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 18),
+                              child: _buildProSubscriptionRibbon(isDark),
+                            ),
+
+                            const SizedBox(height: 14),
 
                             // 1. Blinq Card Carousel
                             SizedBox(
@@ -225,28 +285,28 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
                               ),
                             ],
 
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 18),
 
                             // 2. Active Card Live QR Code Section (Blinq Hero Presentation)
                             if (activeCard != null) ...[
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: 18),
                                 child: _buildQrPresentationBox(activeCard, isDark),
-                              ),
-
-                              const SizedBox(height: 22),
-
-                              // 3. Quick Action Buttons Grid (Share, NFC, Copy, View)
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: _buildActionGrid(activeCard, isDark),
                               ),
 
                               const SizedBox(height: 20),
 
+                              // 3. Quick Action Buttons Grid (Edit, Share, NFC, Copy, View)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 18),
+                                child: _buildActionGrid(activeCard, isDark),
+                              ),
+
+                              const SizedBox(height: 18),
+
                               // 4. Quick Metrics Strip
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: 18),
                                 child: _buildMetricsStrip(activeCard, isDark),
                               ),
                             ],
@@ -254,6 +314,67 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
                         ),
                       ),
                     ),
+    );
+  }
+
+  Widget _buildProSubscriptionRibbon(bool isDark) {
+    return GestureDetector(
+      onTap: () => SubscriptionScreen.show(context),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF0F766E), Color(0xFF0D9488)],
+          ),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withOpacity(0.25),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.stars_rounded, color: Colors.amberAccent, size: 18),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppStrings.tr('upgrade_pro'),
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 13),
+                  ),
+                  const Text(
+                    'بطاقات غير محدودة، تحليلات متقدمة، وهوية بدون قيود',
+                    style: TextStyle(color: Colors.white70, fontSize: 10),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Text(
+                'الخطط',
+                style: TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.w900, fontSize: 11),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -274,15 +395,15 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
               child: const Icon(Icons.credit_card_off_rounded, size: 40, color: AppColors.primary),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'لا توجد بطاقات حتى الآن',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+            Text(
+              AppStrings.tr('empty_cards'),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'أنشئ بطاقتك الذكية الأولى وشارك بياناتك ورمز الـ QR الخاص بك بنقرة واحدة.',
+            Text(
+              AppStrings.tr('empty_cards_sub'),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, color: Colors.grey),
+              style: const TextStyle(fontSize: 13, color: Colors.grey),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
@@ -293,7 +414,7 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
               icon: const Icon(Icons.add_rounded),
-              label: const Text('إنشاء بطاقة جديدة الآن', style: TextStyle(fontWeight: FontWeight.w900)),
+              label: Text(AppStrings.tr('new_card'), style: const TextStyle(fontWeight: FontWeight.w900)),
               onPressed: _openCreateCard,
             ),
           ],
@@ -310,13 +431,22 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
         margin: const EdgeInsets.symmetric(horizontal: 6),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
-          gradient: LinearGradient(
-            colors: isSelected
-                ? [const Color(0xFF0F766E), const Color(0xFF0D9488), const Color(0xFF14B8A6)]
-                : [const Color(0xFF1E293B), const Color(0xFF334155)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: card.coverImage == null
+              ? LinearGradient(
+                  colors: isSelected
+                      ? [const Color(0xFF0F766E), const Color(0xFF0D9488), const Color(0xFF14B8A6)]
+                      : [const Color(0xFF1E293B), const Color(0xFF334155)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          image: card.coverImage != null
+              ? DecorationImage(
+                  image: NetworkImage(card.coverImage!),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
+                )
+              : null,
           boxShadow: [
             BoxShadow(
               color: isSelected ? AppColors.primary.withOpacity(0.35) : Colors.black.withOpacity(0.12),
@@ -329,79 +459,82 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
           borderRadius: BorderRadius.circular(24),
           child: Stack(
             children: [
-              // Decorative background wave circles
-              Positioned(
-                top: -40,
-                right: -40,
-                child: Container(
-                  width: 140,
-                  height: 140,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.08),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Top Row: Company & Status Switch
+                    // Top Row: Company Badge + Status Switch + Edit Action
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.35),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.white24),
+                          ),
+                          child: Text(
+                            card.companyName.isNotEmpty ? card.companyName : 'Access',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
                         Row(
                           children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.18),
-                                borderRadius: BorderRadius.circular(10),
+                            // Quick Edit Icon
+                            InkWell(
+                              onTap: () => _openEditCard(card),
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.35),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.white24),
+                                ),
+                                child: const Icon(Icons.edit_rounded, color: Colors.white, size: 14),
                               ),
-                              child: Text(
-                                card.companyName.isNotEmpty ? card.companyName : 'Access',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.5,
+                            ),
+                            const SizedBox(width: 8),
+
+                            // Toggle Status
+                            InkWell(
+                              onTap: () => _toggleStatus(card),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: card.isActive
+                                      ? const Color(0xFF10B981).withOpacity(0.45)
+                                      : Colors.red.withOpacity(0.45),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: card.isActive ? const Color(0xFF34D399) : Colors.redAccent,
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      card.isActive ? Icons.check_circle_rounded : Icons.pause_circle_rounded,
+                                      color: Colors.white,
+                                      size: 13,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      card.isActive ? AppStrings.tr('active') : AppStrings.tr('inactive'),
+                                      style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
                           ],
-                        ),
-                        InkWell(
-                          onTap: () => _toggleStatus(card),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: card.isActive
-                                  ? const Color(0xFF10B981).withOpacity(0.35)
-                                  : Colors.red.withOpacity(0.35),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: card.isActive ? const Color(0xFF34D399) : Colors.redAccent,
-                                width: 1,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  card.isActive ? Icons.check_circle_rounded : Icons.pause_circle_rounded,
-                                  color: Colors.white,
-                                  size: 13,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  card.isActive ? 'مفعلة' : 'معطلة',
-                                  style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
                         ),
                       ],
                     ),
@@ -411,22 +544,29 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
                     // Avatar + Name + Title
                     Row(
                       children: [
-                        CircleAvatar(
-                          radius: 26,
-                          backgroundColor: Colors.white.withOpacity(0.2),
-                          backgroundImage: card.avatar != null && card.avatar!.isNotEmpty
-                              ? NetworkImage(card.avatar!)
-                              : null,
-                          child: (card.avatar == null || card.avatar!.isEmpty)
-                              ? Text(
-                                  card.name.isNotEmpty ? card.name[0] : 'A',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                )
-                              : null,
+                        Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          child: CircleAvatar(
+                            radius: 26,
+                            backgroundColor: Colors.white.withOpacity(0.2),
+                            backgroundImage: card.avatar != null && card.avatar!.isNotEmpty
+                                ? NetworkImage(card.avatar!)
+                                : null,
+                            child: (card.avatar == null || card.avatar!.isEmpty)
+                                ? Text(
+                                    card.name.isNotEmpty ? card.name[0] : 'A',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  )
+                                : null,
+                          ),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -462,7 +602,7 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
                       ],
                     ),
 
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
                   ],
                 ),
               ),
@@ -513,14 +653,14 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
                     color: AppColors.primary.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.fullscreen_rounded, color: AppColors.primary, size: 16),
-                      SizedBox(width: 4),
+                      const Icon(Icons.fullscreen_rounded, color: AppColors.primary, size: 16),
+                      const SizedBox(width: 4),
                       Text(
-                        'تكبير الشاشة',
-                        style: TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold),
+                        AppStrings.tr('fullscreen_qr'),
+                        style: const TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -582,10 +722,22 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
   Widget _buildActionGrid(SmartCardModel card, bool isDark) {
     return Row(
       children: [
-        // Share Button
+        // 1. Edit Card Button
         Expanded(
           child: _buildActionButton(
-            label: 'مشاركة',
+            label: AppStrings.tr('edit_card'),
+            icon: Icons.edit_note_rounded,
+            color: const Color(0xFFF59E0B),
+            isDark: isDark,
+            onTap: () => _openEditCard(card),
+          ),
+        ),
+        const SizedBox(width: 8),
+
+        // 2. Share Button
+        Expanded(
+          child: _buildActionButton(
+            label: AppStrings.tr('share'),
             icon: Icons.share_rounded,
             color: AppColors.primary,
             isDark: isDark,
@@ -597,12 +749,12 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
             },
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 8),
 
-        // NFC Write Button
+        // 3. NFC Write Button
         Expanded(
           child: _buildActionButton(
-            label: 'برمجة NFC',
+            label: AppStrings.tr('write_nfc'),
             icon: Icons.nfc_rounded,
             color: const Color(0xFF0EA5E9),
             isDark: isDark,
@@ -616,12 +768,12 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
             },
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 8),
 
-        // Copy Link Button
+        // 4. Copy Link Button
         Expanded(
           child: _buildActionButton(
-            label: 'نسخ الرابط',
+            label: AppStrings.tr('copy_link'),
             icon: Icons.copy_rounded,
             color: const Color(0xFF8B5CF6),
             isDark: isDark,
@@ -629,17 +781,17 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
               Clipboard.setData(ClipboardData(text: card.publicUrl));
               HapticFeedback.mediumImpact();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('تم نسخ رابط البطاقة بنجاح')),
+                SnackBar(content: Text(AppStrings.tr('link_copied'))),
               );
             },
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 8),
 
-        // Preview Button
+        // 5. Preview Button
         Expanded(
           child: _buildActionButton(
-            label: 'معاينة',
+            label: AppStrings.tr('preview'),
             icon: Icons.visibility_rounded,
             color: const Color(0xFF10B981),
             isDark: isDark,
@@ -666,12 +818,12 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(16),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkSurface : Colors.white,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
           boxShadow: [
             BoxShadow(
@@ -684,22 +836,24 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
         child: Column(
           children: [
             Container(
-              width: 38,
-              height: 38,
+              width: 36,
+              height: 36,
               decoration: BoxDecoration(
                 color: color.withOpacity(0.12),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: color, size: 20),
+              child: Icon(icon, color: color, size: 18),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Text(
               label,
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 10,
                 fontWeight: FontWeight.bold,
                 color: isDark ? Colors.white70 : const Color(0xFF334155),
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -718,11 +872,11 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildMetricItem('المشاهدات', '${card.viewsCount}', Icons.remove_red_eye_outlined, AppColors.primary),
+          _buildMetricItem(AppStrings.tr('views'), '${card.viewsCount}', Icons.remove_red_eye_outlined, AppColors.primary),
           Container(width: 1, height: 28, color: isDark ? Colors.white12 : Colors.black12),
-          _buildMetricItem('تحميلات vCard', '${card.vcardDownloadsCount}', Icons.contact_page_outlined, const Color(0xFF0EA5E9)),
+          _buildMetricItem(AppStrings.tr('vcard_downloads'), '${card.vcardDownloadsCount}', Icons.contact_page_outlined, const Color(0xFF0EA5E9)),
           Container(width: 1, height: 28, color: isDark ? Colors.white12 : Colors.black12),
-          _buildMetricItem('المعارف المكتسبة', '${card.leadsCount}', Icons.people_outline, const Color(0xFF10B981)),
+          _buildMetricItem(AppStrings.tr('leads'), '${card.leadsCount}', Icons.people_outline, const Color(0xFF10B981)),
         ],
       ),
     );

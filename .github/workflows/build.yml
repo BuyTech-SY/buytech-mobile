@@ -56,9 +56,9 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.0.0
-          name: "Access Cards v2.0.0 (Blinq Edition)"
-          body: "Official Native Flutter Release APK for Access Smart Digital Cards (Blinq Edition)"
+          tag_name: v2.1.0
+          name: "Access Cards v2.1.0 (Blinq Pro Edition)"
+          body: "Official Native Flutter Release APK for Access Smart Digital Cards (Blinq Pro Edition with Dark Mode, Bilingual AR/EN, Animated Intro, Card Editor, Avatar & Cover styles, and Subscriptions)"
           files: |
             build/app/outputs/flutter-apk/access.apk
             build/app/outputs/flutter-apk/app-release.apk

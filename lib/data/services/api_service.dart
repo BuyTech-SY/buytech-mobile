@@ -99,6 +99,29 @@ class ApiService {
     }
   }
 
+  // Update Smart Card
+  static Future<Map<String, dynamic>> updateSmartCard(int cardId, Map<String, dynamic> cardData) async {
+    final token = await StorageService.getToken();
+    try {
+      final res = await http.put(
+        Uri.parse('${ApiConstants.smartCards}/$cardId'),
+        headers: ApiConstants.headers(token: token),
+        body: jsonEncode(cardData),
+      );
+      final data = jsonDecode(res.body) as Map<String, dynamic>;
+      if (res.statusCode == 200 && data['success'] == true) {
+        return {
+          'success': true,
+          'card': SmartCardModel.fromJson(data['card'] as Map<String, dynamic>),
+          'message': data['message'] ?? 'تم تحديث بيانات البطاقة بنجاح',
+        };
+      }
+      return {'success': false, 'message': data['message'] ?? 'فشل تحديث البطاقة'};
+    } catch (e) {
+      return {'success': false, 'message': 'خطأ في الاتصال بالخادم'};
+    }
+  }
+
   // Delete Smart Card
   static Future<bool> deleteSmartCard(int cardId) async {
     final token = await StorageService.getToken();

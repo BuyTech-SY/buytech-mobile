@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/localization/app_strings.dart';
 import '../smart_cards/smart_cards_screen.dart';
 import '../scanner/qr_scanner_screen.dart';
 import '../leads/leads_crm_screen.dart';
@@ -64,26 +65,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             indicatorColor: AppColors.primary.withOpacity(0.15),
-            destinations: const [
+            destinations: [
               NavigationDestination(
-                icon: Icon(Icons.credit_card_outlined),
-                selectedIcon: Icon(Icons.credit_card_rounded, color: AppColors.primary),
-                label: 'بطاقاتي',
+                icon: const Icon(Icons.credit_card_outlined),
+                selectedIcon: const Icon(Icons.credit_card_rounded, color: AppColors.primary),
+                label: AppStrings.tr('my_cards'),
               ),
               NavigationDestination(
-                icon: Icon(Icons.qr_code_scanner_outlined),
-                selectedIcon: Icon(Icons.qr_code_scanner_rounded, color: AppColors.primary),
-                label: 'الماسح',
+                icon: const Icon(Icons.qr_code_scanner_outlined),
+                selectedIcon: const Icon(Icons.qr_code_scanner_rounded, color: AppColors.primary),
+                label: AppStrings.tr('qr_scanner'),
               ),
               NavigationDestination(
-                icon: Icon(Icons.contacts_outlined),
-                selectedIcon: Icon(Icons.contacts_rounded, color: AppColors.primary),
-                label: 'المعارف',
+                icon: const Icon(Icons.contacts_outlined),
+                selectedIcon: const Icon(Icons.contacts_rounded, color: AppColors.primary),
+                label: AppStrings.tr('contacts'),
               ),
               NavigationDestination(
-                icon: Icon(Icons.person_outline_rounded),
-                selectedIcon: Icon(Icons.person_rounded, color: AppColors.primary),
-                label: 'الإعدادات',
+                icon: const Icon(Icons.person_outline_rounded),
+                selectedIcon: const Icon(Icons.person_rounded, color: AppColors.primary),
+                label: AppStrings.tr('settings'),
               ),
             ],
           ),
