@@ -29,7 +29,7 @@ jobs:
 
       - name: Configure Android Scaffolding
         run: |
-          flutter create --platforms=android --org com.buytech .
+          flutter create --platforms=android --org com.buytech --project-name buytech_flutter .
 
       - name: Add NFC Permissions
         run: |
