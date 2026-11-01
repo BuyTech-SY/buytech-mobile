@@ -334,7 +334,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                         f,
                         style: TextStyle(
                           fontSize: 12,
-                          color: isDark ? Colors.white80 : const Color(0xFF334155),
+                          color: isDark ? Colors.white70 : const Color(0xFF334155),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
