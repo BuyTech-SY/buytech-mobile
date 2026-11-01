@@ -1,0 +1,469 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 393 852" width="393" height="852" style="background:#050B14; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="bgGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#050B14"/>
+      <stop offset="40%" stop-color="#081020"/>
+      <stop offset="100%" stop-color="#050B14"/>
+    </linearGradient>
+
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#48BEC1"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0C234F"/>
+      <stop offset="60%" stop-color="#09152B"/>
+      <stop offset="100%" stop-color="#050C19"/>
+    </linearGradient>
+
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0E192D"/>
+      <stop offset="100%" stop-color="#08101E"/>
+    </linearGradient>
+
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </linearGradient>
+
+    <linearGradient id="mintGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+
+    <linearGradient id="macScreenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B2960"/>
+      <stop offset="30%" stop-color="#48BEC1"/>
+      <stop offset="70%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </linearGradient>
+
+    <radialGradient id="cyanGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#48BEC1" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#48BEC1" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Filters -->
+    <filter id="shadowSm" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <filter id="glowCyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="393" height="852" fill="url(#bgGrad1)"/>
+
+  <!-- Subtle Ambient Glows -->
+  <circle cx="330" cy="180" r="140" fill="url(#cyanGlow)"/>
+  <circle cx="50" cy="520" r="160" fill="url(#cyanGlow)"/>
+
+  <!-- ==================== STATUS BAR ==================== -->
+  <g id="statusBar">
+    <!-- Time -->
+    <text x="34" y="32" font-size="14" font-weight="600" fill="#FFFFFF" letter-spacing="-0.3">9:41</text>
+    
+    <!-- Dynamic Island Pill -->
+    <rect x="133" y="11" width="127" height="30" rx="15" fill="#000000"/>
+    <!-- Sensor dot -->
+    <circle cx="236" cy="26" r="4.5" fill="#141414"/>
+    <circle cx="236" cy="26" r="2" fill="#0B2027"/>
+    <circle cx="218" cy="26" r="2" fill="#0E1810"/>
+
+    <!-- Icons Right (Cellular, 5G, Battery) -->
+    <!-- Signal Bars -->
+    <rect x="306" y="24" width="3" height="4" rx="0.8" fill="#FFFFFF"/>
+    <rect x="311" y="21" width="3" height="7" rx="0.8" fill="#FFFFFF"/>
+    <rect x="316" y="18" width="3" height="10" rx="0.8" fill="#FFFFFF"/>
+    <rect x="321" y="15" width="3" height="13" rx="0.8" fill="#FFFFFF"/>
+
+    <!-- 5G Badge -->
+    <text x="328" y="26" font-size="9" font-weight="700" fill="#FFFFFF" letter-spacing="-0.2">5G</text>
+
+    <!-- Battery -->
+    <rect x="348" y="17" width="22" height="11" rx="3" fill="none" stroke="#FFFFFF" stroke-width="1.2" stroke-opacity="0.8"/>
+    <rect x="350" y="19" width="15" height="7" rx="1.5" fill="#10B981"/>
+    <path d="M 371 20.5 Q 372 21 372 22.5 Q 372 24 371 24.5 Z" fill="#FFFFFF" fill-opacity="0.6"/>
+  </g>
+
+  <!-- ==================== APP HEADER ==================== -->
+  <g id="appHeader" transform="translate(16, 50)">
+    <!-- Location Pill -->
+    <g transform="translate(0, 0)">
+      <circle cx="6" cy="6" r="3" fill="#48BEC1"/>
+      <text x="14" y="9" font-size="10.5" font-weight="500" fill="#94A3B8">Deliver to: <tspan fill="#F8FAFC" font-weight="600">Olaya, Riyadh</tspan></text>
+      <path d="M 124 6 L 128 10 L 132 6" fill="none" stroke="#94A3B8" stroke-width="1.2" stroke-linecap="round"/>
+    </g>
+
+    <!-- Brand Row -->
+    <g transform="translate(0, 20)">
+      <!-- BuyTech Logo Icon -->
+      <rect x="0" y="0" width="34" height="34" rx="9" fill="#0B2960" stroke="#48BEC1" stroke-width="1.2"/>
+      <path d="M 10 9 L 18 9 C 21 9 23 11 23 13 C 23 14.5 22 15.5 20.5 16 C 22.5 16.5 24 18 24 20.5 C 24 23 21.5 25 18 25 L 10 25 Z" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M 10 17 L 19 17" stroke="#48BEC1" stroke-width="2.2"/>
+      <circle cx="21" cy="9" r="2.5" fill="#48BEC1"/>
+
+      <!-- Brand Wordmark -->
+      <text x="42" y="21" font-size="20" font-weight="800" fill="#FFFFFF" letter-spacing="-0.5">Buy<tspan fill="#48BEC1">Tech</tspan></text>
+      <text x="43" y="31" font-size="7.5" font-weight="700" fill="#64748B" letter-spacing="1.2">AUTHORIZED PLATFORM</text>
+
+      <!-- Right Header Actions (Bell & Cart) -->
+      <!-- Notification Bell -->
+      <g transform="translate(284, 4)">
+        <rect width="32" height="32" rx="16" fill="#0E192D" stroke="rgba(255,255,255,0.08)"/>
+        <path d="M 16 9 C 13.5 9 12 11 12 14 L 11 19 L 21 19 L 20 14 C 20 11 18.5 9 16 9 Z M 14.5 21 C 14.5 21.8 15.2 22.5 16 22.5 C 16.8 22.5 17.5 21.8 17.5 21 Z" fill="none" stroke="#94A3B8" stroke-width="1.4" stroke-linejoin="round"/>
+        <!-- Unread badge -->
+        <circle cx="23" cy="8" r="4.5" fill="#EF4444"/>
+        <text x="23" y="11" font-size="7" font-weight="700" fill="#FFFFFF" text-anchor="middle">2</text>
+      </g>
+
+      <!-- Cart Button with badge -->
+      <g transform="translate(324, 4)">
+        <rect width="36" height="32" rx="16" fill="#0B2960" stroke="#48BEC1" stroke-width="1"/>
+        <path d="M 12 11 L 24 11 L 22.5 21 L 13.5 21 Z M 15 11 C 15 8.5 21 8.5 21 11" fill="none" stroke="#FFFFFF" stroke-width="1.4" stroke-linejoin="round"/>
+        <circle cx="27" cy="8" r="5" fill="#48BEC1"/>
+        <text x="27" y="11.5" font-size="7.5" font-weight="800" fill="#050B14" text-anchor="middle">3</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ==================== SEARCH BAR ==================== -->
+  <g id="searchBar" transform="translate(16, 116)">
+    <rect width="361" height="42" rx="12" fill="#0B1528" stroke="rgba(72,190,193,0.25)" stroke-width="1"/>
+    <!-- Magnifying Glass Icon -->
+    <path d="M 21 17 A 4.5 4.5 0 1 1 16.5 21.5 A 4.5 4.5 0 0 1 21 17 M 24.5 24.5 L 29 29" fill="none" stroke="#48BEC1" stroke-width="1.8" stroke-linecap="round"/>
+    <text x="36" y="25" font-size="12" fill="#94A3B8" font-weight="400">Search MacBook, iPhone 16, Sony ANC...</text>
+
+    <!-- Barcode Scanner / Filter Icon -->
+    <g transform="translate(326, 11)">
+      <rect width="20" height="20" rx="5" fill="#08101E"/>
+      <path d="M 4 4 H 8 V 6 H 4 V 4 Z M 12 4 H 16 V 6 H 12 V 4 Z M 4 14 H 8 V 16 H 4 V 14 Z M 12 14 H 16 V 16 H 12 V 14 Z M 7 8 H 13 V 12 H 7 V 8 Z" fill="#48BEC1"/>
+    </g>
+  </g>
+
+  <!-- ==================== CATEGORY PILLS ==================== -->
+  <g id="categoryPills" transform="translate(16, 170)">
+    <!-- Pill 1: Active -->
+    <g transform="translate(0, 0)">
+      <rect width="84" height="30" rx="15" fill="url(#cyanGrad)"/>
+      <text x="42" y="19" font-size="11" font-weight="700" fill="#050B14" text-anchor="middle">🔥 All Deals</text>
+    </g>
+
+    <!-- Pill 2 -->
+    <g transform="translate(90, 0)">
+      <rect width="88" height="30" rx="15" fill="#0A1324" stroke="rgba(255,255,255,0.08)"/>
+      <text x="134" y="19" font-size="11" font-weight="500" fill="#94A3B8" text-anchor="middle">Mac & Laptops</text>
+    </g>
+
+    <!-- Pill 3 -->
+    <g transform="translate(184, 0)">
+      <rect width="90" height="30" rx="15" fill="#0A1324" stroke="rgba(255,255,255,0.08)"/>
+      <text x="229" y="19" font-size="11" font-weight="500" fill="#94A3B8" text-anchor="middle">Smartphones</text>
+    </g>
+
+    <!-- Pill 4 -->
+    <g transform="translate(280, 0)">
+      <rect width="81" height="30" rx="15" fill="#0A1324" stroke="rgba(255,255,255,0.08)"/>
+      <text x="320" y="19" font-size="11" font-weight="500" fill="#94A3B8" text-anchor="middle">Pro Audio</text>
+    </g>
+  </g>
+
+  <!-- ==================== FEATURED HERO CARD (MacBook Pro) ==================== -->
+  <g id="heroBanner" transform="translate(16, 212)" filter="url(#shadowSm)">
+    <!-- Card Frame -->
+    <rect width="361" height="190" rx="18" fill="url(#heroGrad)" stroke="#48BEC1" stroke-width="1.2" stroke-opacity="0.4"/>
+    
+    <!-- Decorative Circuit Lines in Background -->
+    <path d="M 180 20 L 230 20 L 260 50 L 340 50" fill="none" stroke="#48BEC1" stroke-width="0.8" stroke-opacity="0.2"/>
+    <circle cx="340" cy="50" r="2" fill="#48BEC1" fill-opacity="0.4"/>
+
+    <!-- Left Content -->
+    <!-- Agency Badge -->
+    <g transform="translate(18, 18)">
+      <rect width="138" height="20" rx="10" fill="rgba(72,190,193,0.15)" stroke="#48BEC1" stroke-width="0.8" stroke-opacity="0.5"/>
+      <text x="69" y="13.5" font-size="8.5" font-weight="700" fill="#48BEC1" text-anchor="middle">🛡️ 2-YR OFFICIAL WARRANTY</text>
+    </g>
+
+    <!-- Title & Specs -->
+    <text x="18" y="60" font-size="18" font-weight="800" fill="#FFFFFF" letter-spacing="-0.3">MacBook Pro 16"</text>
+    <text x="18" y="77" font-size="11" font-weight="500" fill="#94A3B8">M3 Max • 36GB Unified • 1TB SSD</text>
+
+    <!-- Pricing Row -->
+    <text x="18" y="106" font-size="20" font-weight="800" fill="#FFFFFF">SAR 11,499</text>
+    <text x="18" y="122" font-size="10.5" font-weight="500" fill="#64748B" text-decoration="line-through">SAR 12,999</text>
+    
+    <!-- Save Badge -->
+    <g transform="translate(90, 111)">
+      <rect width="80" height="16" rx="8" fill="rgba(16,185,129,0.18)"/>
+      <text x="40" y="11.5" font-size="8.5" font-weight="700" fill="#10B981" text-anchor="middle">Save SAR 1,500</text>
+    </g>
+
+    <!-- CTA Button -->
+    <g transform="translate(18, 142)">
+      <rect width="124" height="32" rx="10" fill="url(#cyanGrad)"/>
+      <text x="62" y="20.5" font-size="11.5" font-weight="800" fill="#050B14" text-anchor="middle">Order Now ⚡</text>
+    </g>
+
+    <!-- Right Vector Art: MacBook Pro Open -->
+    <g id="macbookIllustration" transform="translate(186, 26)">
+      <!-- Ambient Display Glow -->
+      <ellipse cx="80" cy="65" rx="55" ry="38" fill="url(#cyanGlow)"/>
+
+      <!-- Laptop Screen Shell (Space Black) -->
+      <rect x="22" y="15" width="128" height="82" rx="6" fill="#18181B" stroke="#3F3F46" stroke-width="1.2"/>
+      <!-- Screen Bezel Interior -->
+      <rect x="25" y="18" width="122" height="76" rx="4" fill="#09090B"/>
+      <!-- Screen Display Canvas with dynamic wallpaper -->
+      <rect x="26" y="19" width="120" height="73" rx="3" fill="url(#macScreenGrad)"/>
+      <!-- Screen Notch -->
+      <rect x="80" y="18" width="12" height="4" rx="2" fill="#09090B"/>
+      <!-- Menu bar hint -->
+      <line x1="26" y1="23" x2="146" y2="23" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="0.5"/>
+
+      <!-- Laptop Bottom Deck / Keyboard Base -->
+      <!-- Hinge -->
+      <rect x="36" y="94" width="100" height="4" rx="1" fill="#27272A"/>
+      <!-- Bottom Case (Perspective Trapezoid) -->
+      <path d="M 6 130 L 166 130 L 150 96 L 22 96 Z" fill="#27272A" stroke="#52525B" stroke-width="1"/>
+      <!-- Keyboard Well -->
+      <path d="M 28 100 L 144 100 L 138 116 L 34 116 Z" fill="#09090B"/>
+      <!-- Key rows representation -->
+      <rect x="38" y="103" width="96" height="3" fill="#3F3F46" rx="0.5"/>
+      <rect x="36" y="108" width="100" height="3" fill="#3F3F46" rx="0.5"/>
+      <rect x="35" y="113" width="102" height="2" fill="#52525B" rx="0.5"/>
+      <!-- Trackpad -->
+      <path d="M 68 118 L 104 118 L 102 128 L 70 128 Z" fill="#1C1917" stroke="#3F3F46" stroke-width="0.6"/>
+      <!-- Front notch thumb scoop -->
+      <path d="M 80 130 C 82 129, 90 129, 92 130" stroke="#71717A" stroke-width="1"/>
+    </g>
+  </g>
+
+  <!-- ==================== FLASH DEALS HEADER ==================== -->
+  <g id="flashHeader" transform="translate(16, 420)">
+    <text x="0" y="16" font-size="15" font-weight="700" fill="#FFFFFF">Authorized Flash Deals</text>
+    
+    <!-- Countdown Pill -->
+    <g transform="translate(158, 2)">
+      <rect width="112" height="18" rx="9" fill="rgba(245,158,11,0.15)" stroke="#F59E0B" stroke-width="0.8" stroke-opacity="0.4"/>
+      <text x="56" y="12.5" font-size="9" font-weight="700" fill="#F59E0B" text-anchor="middle">⏱️ Ends in 04:22:15</text>
+    </g>
+
+    <!-- See All Link -->
+    <text x="361" y="15" font-size="11.5" font-weight="600" fill="#48BEC1" text-anchor="end">See All ›</text>
+  </g>
+
+  <!-- ==================== PRODUCT CARDS GRID ==================== -->
+  <!-- Card 1: iPhone 16 Pro Max -->
+  <g id="card1" transform="translate(16, 446)" filter="url(#shadowSm)">
+    <rect width="174" height="258" rx="16" fill="url(#cardGrad)" stroke="rgba(72,190,193,0.2)" stroke-width="1"/>
+
+    <!-- Agency Badge -->
+    <g transform="translate(8, 8)">
+      <rect width="88" height="16" rx="8" fill="rgba(72,190,193,0.15)"/>
+      <text x="44" y="11.5" font-size="7.5" font-weight="700" fill="#48BEC1" text-anchor="middle">🛡️ Arab Computers</text>
+    </g>
+
+    <!-- Same-day Pill -->
+    <g transform="translate(100, 8)">
+      <rect width="66" height="16" rx="8" fill="rgba(16,185,129,0.15)"/>
+      <text x="33" y="11.5" font-size="7.5" font-weight="700" fill="#10B981" text-anchor="middle">⚡ Same-Day</text>
+    </g>
+
+    <!-- Vector iPhone 16 Pro Image -->
+    <g transform="translate(47, 32)">
+      <!-- iPhone Outer Frame (Desert Titanium) -->
+      <rect x="0" y="0" width="80" height="98" rx="14" fill="#C5A880" stroke="#E6D3B3" stroke-width="1"/>
+      <!-- Inner Matte Back Glass -->
+      <rect x="2" y="2" width="76" height="94" rx="12" fill="#BFA37E"/>
+      
+      <!-- Camera Island (Top Left) -->
+      <rect x="6" y="6" width="38" height="40" rx="10" fill="#A88C68" stroke="#D4BD9E" stroke-width="0.8"/>
+      <!-- Triple Lens Matrix -->
+      <!-- Lens 1 (Top Left) -->
+      <circle cx="16" cy="16" r="7" fill="#1E293B" stroke="#D4BD9E" stroke-width="1.2"/>
+      <circle cx="16" cy="16" r="4" fill="#020617"/>
+      <circle cx="15" cy="15" r="1.5" fill="#48BEC1" opacity="0.8"/>
+      <!-- Lens 2 (Bottom Left) -->
+      <circle cx="16" cy="34" r="7" fill="#1E293B" stroke="#D4BD9E" stroke-width="1.2"/>
+      <circle cx="16" cy="34" r="4" fill="#020617"/>
+      <!-- Lens 3 (Right Center) -->
+      <circle cx="33" cy="25" r="7" fill="#1E293B" stroke="#D4BD9E" stroke-width="1.2"/>
+      <circle cx="33" cy="25" r="4" fill="#020617"/>
+      <!-- Flash & LiDAR -->
+      <circle cx="33" cy="12" r="2.5" fill="#FEF08A"/>
+      <circle cx="33" cy="38" r="2" fill="#0F172A"/>
+
+      <!-- Apple Logo subtle watermark -->
+      <circle cx="40" cy="62" r="6" fill="#A18562" fill-opacity="0.6"/>
+    </g>
+
+    <!-- Card Content Info -->
+    <text x="12" y="146" font-size="12.5" font-weight="700" fill="#FFFFFF">iPhone 16 Pro Max</text>
+    <text x="12" y="161" font-size="9.5" font-weight="500" fill="#94A3B8">256GB • Desert Titanium</text>
+    
+    <!-- Rating -->
+    <g transform="translate(12, 172)">
+      <text x="0" y="8" font-size="9" font-weight="700" fill="#F59E0B">★ 4.9</text>
+      <text x="24" y="8" font-size="8.5" fill="#64748B">(512)</text>
+      <!-- Stock tag -->
+      <text x="76" y="8" font-size="8" font-weight="600" fill="#10B981">● In Stock</text>
+    </g>
+
+    <!-- Price Section -->
+    <text x="12" y="206" font-size="15" font-weight="800" fill="#FFFFFF">SAR 5,099</text>
+    <text x="12" y="221" font-size="9" font-weight="500" fill="#64748B">USD $1,359</text>
+
+    <!-- Add to Cart Plus Button -->
+    <g transform="translate(132, 194)">
+      <circle cx="15" cy="15" r="15" fill="url(#cyanGrad)"/>
+      <path d="M 15 9 L 15 21 M 9 15 L 21 15" stroke="#050B14" stroke-width="2" stroke-linecap="round"/>
+    </g>
+
+    <!-- Official Warranty Micro Stamp -->
+    <g transform="translate(12, 234)">
+      <rect width="150" height="14" rx="4" fill="#070D18"/>
+      <text x="75" y="10" font-size="7.5" font-weight="600" fill="#94A3B8" text-anchor="middle">2-Yr KSA Agency Warranty</text>
+    </g>
+  </g>
+
+  <!-- Card 2: Sony WH-1000XM5 -->
+  <g id="card2" transform="translate(203, 446)" filter="url(#shadowSm)">
+    <rect width="174" height="258" rx="16" fill="url(#cardGrad)" stroke="rgba(72,190,193,0.2)" stroke-width="1"/>
+
+    <!-- Agency Badge -->
+    <g transform="translate(8, 8)">
+      <rect width="84" height="16" rx="8" fill="rgba(72,190,193,0.15)"/>
+      <text x="42" y="11.5" font-size="7.5" font-weight="700" fill="#48BEC1" text-anchor="middle">🛡️ Modern Sony</text>
+    </g>
+
+    <!-- Urgency Pill -->
+    <g transform="translate(96, 8)">
+      <rect width="70" height="16" rx="8" fill="rgba(239,68,68,0.18)"/>
+      <text x="35" y="11.5" font-size="7.5" font-weight="700" fill="#F87171" text-anchor="middle">🔥 3 Units Left</text>
+    </g>
+
+    <!-- Vector Sony Headphones Image -->
+    <g transform="translate(47, 32)">
+      <!-- Outer Glow -->
+      <ellipse cx="40" cy="50" rx="35" ry="30" fill="url(#cyanGlow)"/>
+      <!-- Headband Arc -->
+      <path d="M 15 50 C 15 15, 65 15, 65 50" fill="none" stroke="#E4E4E7" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M 18 45 C 18 18, 62 18, 62 45" fill="none" stroke="#71717A" stroke-width="1.5"/>
+      <!-- Left Ear Cup (Silver Matte) -->
+      <ellipse cx="14" cy="58" rx="11" ry="17" fill="#E4E4E7" stroke="#A1A1AA" stroke-width="0.8"/>
+      <ellipse cx="11" cy="58" rx="5" ry="12" fill="#27272A"/>
+      <!-- Right Ear Cup -->
+      <ellipse cx="66" cy="58" rx="11" ry="17" fill="#E4E4E7" stroke="#A1A1AA" stroke-width="0.8"/>
+      <ellipse cx="69" cy="58" rx="5" ry="12" fill="#27272A"/>
+      <!-- Pivot joints -->
+      <circle cx="16" cy="42" r="3" fill="#D4D4D8"/>
+      <circle cx="64" cy="42" r="3" fill="#D4D4D8"/>
+      <!-- Sony tiny wordmark -->
+      <text x="40" y="85" font-size="7" font-weight="700" fill="#A1A1AA" text-anchor="middle" letter-spacing="1">SONY</text>
+    </g>
+
+    <!-- Card Content Info -->
+    <text x="12" y="146" font-size="12.5" font-weight="700" fill="#FFFFFF">Sony WH-1000XM5</text>
+    <text x="12" y="161" font-size="9.5" font-weight="500" fill="#94A3B8">Silver ANC • 30h Battery</text>
+    
+    <!-- Rating -->
+    <g transform="translate(12, 172)">
+      <text x="0" y="8" font-size="9" font-weight="700" fill="#F59E0B">★ 4.8</text>
+      <text x="24" y="8" font-size="8.5" fill="#64748B">(842)</text>
+      <text x="76" y="8" font-size="8" font-weight="600" fill="#48BEC1">● Official KSA</text>
+    </g>
+
+    <!-- Price Section -->
+    <text x="12" y="206" font-size="15" font-weight="800" fill="#FFFFFF">SAR 1,249</text>
+    <text x="12" y="221" font-size="9.5" font-weight="500" fill="#64748B" text-decoration="line-through">SAR 1,499</text>
+
+    <!-- Add to Cart Plus Button -->
+    <g transform="translate(132, 194)">
+      <circle cx="15" cy="15" r="15" fill="url(#cyanGrad)"/>
+      <path d="M 15 9 L 15 21 M 9 15 L 21 15" stroke="#050B14" stroke-width="2" stroke-linecap="round"/>
+    </g>
+
+    <!-- Official Warranty Micro Stamp -->
+    <g transform="translate(12, 234)">
+      <rect width="150" height="14" rx="4" fill="#070D18"/>
+      <text x="75" y="10" font-size="7.5" font-weight="600" fill="#94A3B8" text-anchor="middle">Official Sony Agency Support</text>
+    </g>
+  </g>
+
+  <!-- ==================== VALUE PROP TRUST BANNER ==================== -->
+  <g id="trustBanner" transform="translate(16, 716)">
+    <rect width="361" height="38" rx="10" fill="#071120" stroke="rgba(255,255,255,0.06)"/>
+    <g transform="translate(12, 12)">
+      <!-- Item 1 -->
+      <circle cx="4" cy="7" r="3.5" fill="#10B981"/>
+      <text x="12" y="10" font-size="8.5" font-weight="600" fill="#E2E8F0">30+ Authorized Agencies</text>
+      
+      <!-- Divider -->
+      <circle cx="130" cy="7" r="1.5" fill="#48BEC1"/>
+
+      <!-- Item 2 -->
+      <text x="142" y="10" font-size="8.5" font-weight="600" fill="#E2E8F0">0% Installments (Tabby/Tamara)</text>
+
+      <!-- Divider -->
+      <circle cx="282" cy="7" r="1.5" fill="#48BEC1"/>
+
+      <!-- Item 3 -->
+      <text x="292" y="10" font-size="8.5" font-weight="600" fill="#48BEC1">Fast KSA</text>
+    </g>
+  </g>
+
+  <!-- ==================== BOTTOM NAVIGATION DOCK ==================== -->
+  <g id="bottomNav" transform="translate(0, 764)">
+    <!-- Blur & Glass Background -->
+    <rect width="393" height="88" fill="#050B14" fill-opacity="0.96"/>
+    <line x1="0" y1="0" x2="393" y2="0" stroke="rgba(72,190,193,0.2)" stroke-width="1"/>
+
+    <!-- Tab 1: Home (Active) -->
+    <g transform="translate(36, 12)">
+      <path d="M 6 18 L 6 10 L 12 5 L 18 10 L 18 18 L 13 18 L 13 13 L 11 13 L 11 18 Z" fill="#48BEC1"/>
+      <text x="12" y="28" font-size="9" font-weight="700" fill="#48BEC1" text-anchor="middle">Home</text>
+      <circle cx="12" cy="33" r="1.5" fill="#48BEC1"/>
+    </g>
+
+    <!-- Tab 2: Catalog -->
+    <g transform="translate(112, 12)">
+      <rect x="5" y="6" width="6" height="6" rx="1.5" fill="#64748B"/>
+      <rect x="13" y="6" width="6" height="6" rx="1.5" fill="#64748B"/>
+      <rect x="5" y="14" width="6" height="6" rx="1.5" fill="#64748B"/>
+      <rect x="13" y="14" width="6" height="6" rx="1.5" fill="#64748B"/>
+      <text x="12" y="28" font-size="9" font-weight="500" fill="#64748B" text-anchor="middle">Catalog</text>
+    </g>
+
+    <!-- Tab 3: Hardware Compare (Special Highlight) -->
+    <g transform="translate(186, 8)">
+      <rect width="40" height="34" rx="17" fill="#0B2960" stroke="#48BEC1" stroke-width="1.2"/>
+      <path d="M 14 14 L 20 18 L 14 22 M 26 14 L 20 18 L 26 22" stroke="#48BEC1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text x="20" y="42" font-size="8.5" font-weight="700" fill="#48BEC1" text-anchor="middle">Compare</text>
+    </g>
+
+    <!-- Tab 4: Cart -->
+    <g transform="translate(268, 12)">
+      <path d="M 5 8 L 19 8 L 17.5 18 L 6.5 18 Z M 8.5 8 C 8.5 5.5 15.5 5.5 15.5 8" fill="none" stroke="#64748B" stroke-width="1.4" stroke-linejoin="round"/>
+      <circle cx="19" cy="6" r="4" fill="#48BEC1"/>
+      <text x="19" y="8.5" font-size="6" font-weight="800" fill="#050B14" text-anchor="middle">3</text>
+      <text x="12" y="28" font-size="9" font-weight="500" fill="#64748B" text-anchor="middle">Cart</text>
+    </g>
+
+    <!-- Tab 5: Account -->
+    <g transform="translate(336, 12)">
+      <circle cx="12" cy="9" r="4" fill="none" stroke="#64748B" stroke-width="1.4"/>
+      <path d="M 5 20 C 5 16 9 15 12 15 C 15 15 19 16 19 20" fill="none" stroke="#64748B" stroke-width="1.4"/>
+      <text x="12" y="28" font-size="9" font-weight="500" fill="#64748B" text-anchor="middle">Profile</text>
+    </g>
+
+    <!-- iOS Home Indicator Bar -->
+    <rect x="128" y="74" width="138" height="4.5" rx="2.25" fill="#FFFFFF" fill-opacity="0.35"/>
+  </g>
+</svg>

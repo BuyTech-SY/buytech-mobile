@@ -38,11 +38,16 @@ jobs:
           pip install pillow
           python3 -c "
           import os, shutil
-          from PIL import Image
-          src = 'assets/images/icon-dark.png'
+          from PIL import Image, ImageDraw
+
+          src = 'assets/images/icon-light.png'
+          if not os.path.exists(src):
+              src = 'assets/images/logo-light.png'
           if not os.path.exists(src):
               src = 'assets/images/access-logo.png'
+
           img = Image.open(src).convert('RGBA')
+
           sizes = {
               'mipmap-mdpi': 48,
               'mipmap-hdpi': 72,
@@ -50,17 +55,77 @@ jobs:
               'mipmap-xxhdpi': 144,
               'mipmap-xxxhdpi': 192,
           }
+
           for folder, size in sizes.items():
               target_dir = os.path.join('android', 'app', 'src', 'main', 'res', folder)
               os.makedirs(target_dir, exist_ok=True)
-              resized = img.resize((size, size), Image.Resampling.LANCZOS)
-              resized.save(os.path.join(target_dir, 'ic_launcher.png'), 'PNG')
-              resized.save(os.path.join(target_dir, 'ic_launcher_round.png'), 'PNG')
-              resized.save(os.path.join(target_dir, 'ic_launcher_foreground.png'), 'PNG')
+
+              # Standard icon with 86% padding
+              canvas = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+              inner = int(size * 0.86)
+              offset = (size - inner) // 2
+              resized = img.resize((inner, inner), Image.Resampling.LANCZOS)
+              canvas.paste(resized, (offset, offset), resized)
+              canvas.save(os.path.join(target_dir, 'ic_launcher.png'), 'PNG')
+              canvas.save(os.path.join(target_dir, 'ic_launcher_foreground.png'), 'PNG')
+
+              # Round icon with luxury white circular canvas
+              round_canvas = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+              draw = ImageDraw.Draw(round_canvas)
+              draw.ellipse((0, 0, size - 1, size - 1), fill=(255, 255, 255, 255))
+              r_inner = int(size * 0.72)
+              r_offset = (size - r_inner) // 2
+              r_resized = img.resize((r_inner, r_inner), Image.Resampling.LANCZOS)
+              round_canvas.paste(r_resized, (r_offset, r_offset), r_resized)
+              round_canvas.save(os.path.join(target_dir, 'ic_launcher_round.png'), 'PNG')
+
           anydpi = os.path.join('android', 'app', 'src', 'main', 'res', 'mipmap-anydpi-v26')
           if os.path.exists(anydpi):
               shutil.rmtree(anydpi)
-          print('Successfully generated all Access app launcher icons!')
+          print('Successfully generated all Access light launcher icons and badges!')
+          "
+
+      - name: Configure Permanent Release Keystore & Gradle Signing
+        run: |
+          mkdir -p android/app
+          if [ ! -f "android/app/release.keystore" ]; then
+            echo "Generating permanent release keystore..."
+            keytool -genkeypair -v -keystore android/app/release.keystore \
+              -alias access_key -keyalg RSA -keysize 2048 -validity 10000 \
+              -storepass access_secret_2026 -keypass access_secret_2026 \
+              -dname "CN=Access, OU=Access Mobile, O=Access, L=Damascus, S=Damascus, C=SY"
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add android/app/release.keystore
+            git commit -m "chore: persist permanent release keystore [skip ci]" || true
+            git push origin main || true
+          else
+            echo "Permanent release.keystore already present."
+          fi
+
+          python3 -c "
+          with open('android/app/build.gradle', 'r') as f:
+              code = f.read()
+
+          code = code.replace('signingConfig = signingConfigs.debug', 'signingConfig = signingConfigs.release')
+          code = code.replace('signingConfig signingConfigs.debug', 'signingConfig signingConfigs.release')
+
+          if 'signingConfigs {' not in code:
+              signing_block = '''
+              signingConfigs {
+                  release {
+                      keyAlias 'access_key'
+                      keyPassword 'access_secret_2026'
+                      storeFile file('release.keystore')
+                      storePassword 'access_secret_2026'
+                  }
+              }
+              buildTypes {'''
+              code = code.replace('buildTypes {', signing_block, 1)
+
+          with open('android/app/build.gradle', 'w') as f:
+              f.write(code)
+          print('Successfully configured Gradle release signing!')
           "
 
       - name: Install dependencies
@@ -83,9 +148,9 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.2.0
-          name: "Access Cards v2.2.0 (Blinq Edition)"
-          body: "Official Native Flutter Release APK for Access Smart Digital Cards (Custom Launcher Icon, Instant Launch without Intro delay, Camera Privacy Dot removed, Elevated Card Design)"
+          tag_name: v2.3.0
+          name: "Access Cards v2.3.0 (Blinq Luxury Edition)"
+          body: "Official Native Flutter Release APK for Access Smart Digital Cards (Fixed Launcher Icon with Light Logo, Permanent Release Keystore Signature, Zero Camera Privacy Dot, Dual-Theme Splash Motion)"
           files: |
             build/app/outputs/flutter-apk/access.apk
             build/app/outputs/flutter-apk/app-release.apk

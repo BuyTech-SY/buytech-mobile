@@ -133,31 +133,34 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
         backgroundColor: Colors.transparent,
         title: Row(
           children: [
-            // Access Squircle Logo
+            // Access Adaptive Brand Logo
             Container(
-              width: 36,
-              height: 36,
+              width: 38,
+              height: 38,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF0F766E), Color(0xFF14B8A6)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                  width: 1.2,
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withOpacity(0.3),
-                    blurRadius: 8,
+                    color: isDark
+                        ? Colors.black.withOpacity(0.3)
+                        : Colors.black.withOpacity(0.04),
+                    blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),
                 ],
               ),
               padding: const EdgeInsets.all(6),
               child: Image.asset(
-                'assets/images/logo-white.png',
+                isDark ? 'assets/images/logo-white.png' : 'assets/images/logo-light.png',
                 fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => const Center(
-                  child: Text('A', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 18)),
+                errorBuilder: (_, __, ___) => Image.asset(
+                  isDark ? 'assets/images/icon-dark.png' : 'assets/images/icon-light.png',
+                  fit: BoxFit.contain,
                 ),
               ),
             ),

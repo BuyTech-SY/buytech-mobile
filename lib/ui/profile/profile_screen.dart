@@ -342,14 +342,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Image.asset(
-                        'assets/images/logo-white.png',
+                        isDark ? 'assets/images/logo-white.png' : 'assets/images/logo-light.png',
                         width: 20,
                         height: 20,
-                        errorBuilder: (_, __, ___) => const Icon(Icons.info_outline_rounded, color: AppColors.primary, size: 20),
+                        errorBuilder: (_, __, ___) => Image.asset(
+                          isDark ? 'assets/images/icon-dark.png' : 'assets/images/icon-light.png',
+                          width: 20,
+                          height: 20,
+                        ),
                       ),
                     ),
                     title: const Text('Access Cards Mobile', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                    subtitle: const Text('v2.0.0 • Blinq Edition (Native Flutter)', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                    subtitle: const Text('v2.3.0 • Blinq Edition (Native Flutter)', style: TextStyle(fontSize: 11, color: Colors.grey)),
                   ),
                 ),
 

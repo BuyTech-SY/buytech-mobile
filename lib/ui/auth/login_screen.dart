@@ -72,27 +72,32 @@ class _LoginScreenState extends State<LoginScreen> {
                   // App Brand Logo & Icon
                   Center(
                     child: Container(
-                      width: 84,
-                      height: 84,
+                      width: 88,
+                      height: 88,
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF0F766E), Color(0xFF0D9488), Color(0xFF06B6D4)],
-                          begin: Alignment.topRight,
-                          end: Alignment.bottomLeft,
-                        ),
+                        color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF8FAFC),
                         borderRadius: BorderRadius.circular(28),
+                        border: Border.all(
+                          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                          width: 1.5,
+                        ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.primary.withOpacity(0.3),
+                            color: isDark
+                                ? Colors.black.withOpacity(0.4)
+                                : AppColors.primary.withOpacity(0.12),
                             blurRadius: 20,
-                            offset: const Offset(0, 10),
+                            offset: const Offset(0, 8),
                           ),
                         ],
                       ),
-                      child: const Center(
-                        child: Text(
-                          '📇',
-                          style: TextStyle(fontSize: 40),
+                      padding: const EdgeInsets.all(16),
+                      child: Image.asset(
+                        isDark ? 'assets/images/logo-white.png' : 'assets/images/logo-light.png',
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => Image.asset(
+                          isDark ? 'assets/images/icon-dark.png' : 'assets/images/icon-light.png',
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ),

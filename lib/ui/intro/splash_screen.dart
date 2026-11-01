@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/localization/app_strings.dart';
+import '../../core/state/app_settings.dart';
 import '../../data/services/storage_service.dart';
-import '../auth/login_screen.dart';
 import '../dashboard/dashboard_screen.dart';
+import '../auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,10 +12,13 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _opacityAnimation;
+  late Animation<double> _shimmerAnimation;
+  late Animation<double> _taglineOpacity;
 
   @override
   void initState() {
@@ -26,16 +29,40 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       duration: const Duration(milliseconds: 1400),
     );
 
+    // 1. Smooth Logo Entry Scale
     _scaleAnimation = Tween<double>(begin: 0.82, end: 1.0).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeOutBack),
+      CurvedAnimation(
+        parent: _animController,
+        curve: const Interval(0.0, 0.65, curve: Curves.easeOutCubic),
+      ),
     );
 
+    // 2. Logo Fade In
     _opacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animController, curve: const Interval(0.0, 0.7, curve: Curves.easeIn)),
+      CurvedAnimation(
+        parent: _animController,
+        curve: const Interval(0.0, 0.45, curve: Curves.easeIn),
+      ),
+    );
+
+    // 3. Shimmer Sweep Effect across the Logo
+    _shimmerAnimation = Tween<double>(begin: -1.0, end: 2.0).animate(
+      CurvedAnimation(
+        parent: _animController,
+        curve: const Interval(0.35, 0.85, curve: Curves.easeInOut),
+      ),
+    );
+
+    // 4. Tagline Soft Fade In
+    _taglineOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animController,
+        curve: const Interval(0.55, 0.95, curve: Curves.easeIn),
+      ),
     );
 
     _animController.forward();
-    _checkNextScreen();
+    _navigateToNext();
   }
 
   @override
@@ -44,16 +71,19 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     super.dispose();
   }
 
-  Future<void> _checkNextScreen() async {
-    await Future.delayed(const Duration(milliseconds: 2200));
-    if (!mounted) return;
-
+  Future<void> _navigateToNext() async {
+    // Check login state concurrently during the motion
     final isLoggedIn = await StorageService.isLoggedIn();
+
+    // Wait until motion completes smoothly
+    await Future.delayed(const Duration(milliseconds: 1450));
+    if (!mounted) return;
 
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 600),
-        pageBuilder: (_, __, ___) => isLoggedIn ? const DashboardScreen() : const LoginScreen(),
+        transitionDuration: const Duration(milliseconds: 400),
+        pageBuilder: (_, __, ___) =>
+            isLoggedIn ? const DashboardScreen() : const LoginScreen(),
         transitionsBuilder: (_, animation, __, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -63,154 +93,128 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF090D16),
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Ambient Neon Glow Circles
-          Positioned(
-            top: -60,
-            child: Container(
-              width: 320,
-              height: 320,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.primary.withOpacity(0.18),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withOpacity(0.25),
-                    blurRadius: 120,
-                    spreadRadius: 40,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -60,
-            child: Container(
-              width: 260,
-              height: 260,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color(0xFF0EA5E9).withOpacity(0.12),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF0EA5E9).withOpacity(0.2),
-                    blurRadius: 100,
-                    spreadRadius: 30,
-                  ),
-                ],
-              ),
-            ),
-          ),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-          // Central Animated Brand Content
-          Center(
-            child: AnimatedBuilder(
-              animation: _animController,
-              builder: (context, child) {
-                return Opacity(
-                  opacity: _opacityAnimation.value,
-                  child: Transform.scale(
-                    scale: _scaleAnimation.value,
-                    child: child,
-                  ),
-                );
-              },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Logo Container
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF0F766E), Color(0xFF0D9488), Color(0xFF14B8A6)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primary.withOpacity(0.45),
-                          blurRadius: 32,
-                          offset: const Offset(0, 10),
+    return Scaffold(
+      backgroundColor: isDark ? const Color(0xFF0B0F19) : const Color(0xFFF8FAFC),
+      body: Center(
+        child: AnimatedBuilder(
+          animation: _animController,
+          builder: (context, _) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // 1. Logo Container with Motion Scale & Shimmer
+                Transform.scale(
+                  scale: _scaleAnimation.value,
+                  child: Opacity(
+                    opacity: _opacityAnimation.value,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Soft Ambient Backlight Glow
+                        Container(
+                          width: 140,
+                          height: 140,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isDark
+                                ? AppColors.primary.withOpacity(0.18)
+                                : AppColors.primary.withOpacity(0.10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: isDark
+                                    ? AppColors.primary.withOpacity(0.35)
+                                    : AppColors.primary.withOpacity(0.20),
+                                blurRadius: 40,
+                                spreadRadius: 10,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // The Theme-Adaptive Logo with Shimmer Mask
+                        ShaderMask(
+                          blendMode: BlendMode.srcATop,
+                          shaderCallback: (bounds) {
+                            return LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              stops: [
+                                (_shimmerAnimation.value - 0.3).clamp(0.0, 1.0),
+                                _shimmerAnimation.value.clamp(0.0, 1.0),
+                                (_shimmerAnimation.value + 0.3).clamp(0.0, 1.0),
+                              ],
+                              colors: isDark
+                                  ? [
+                                      Colors.white,
+                                      const Color(0xFF34D399),
+                                      Colors.white,
+                                    ]
+                                  : [
+                                      const Color(0xFF0F172A),
+                                      const Color(0xFF0D9488),
+                                      const Color(0xFF0F172A),
+                                    ],
+                            ).createShader(bounds);
+                          },
+                          child: Image.asset(
+                            // Strict rule: Light logo for Light mode, Dark logo for Dark mode!
+                            isDark
+                                ? 'assets/images/logo-white.png'
+                                : 'assets/images/logo-light.png',
+                            width: 180,
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, __, ___) => Image.asset(
+                              isDark
+                                  ? 'assets/images/icon-dark.png'
+                                  : 'assets/images/icon-light.png',
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                    padding: const EdgeInsets.all(16),
-                    child: Image.asset(
-                      'assets/images/logo-white.png',
-                      fit: BoxFit.contain,
-                      errorBuilder: (_, __, ___) {
-                        return const Center(
-                          child: Text(
-                            'A',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 54,
-                              fontWeight: FontWeight.w900,
-                              fontFamily: 'sans-serif',
-                            ),
-                          ),
-                        );
-                      },
-                    ),
                   ),
-                  const SizedBox(height: 26),
-
-                  // Brand Name
-                  const Text(
-                    'ACCESS',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 4.0,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Tagline
-                  Text(
-                    AppStrings.tr('app_tagline'),
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.75),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // Bottom Version Badge
-          Positioned(
-            bottom: 36,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.06),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withOpacity(0.1)),
-              ),
-              child: const Text(
-                'v2.0.0 • Blinq Edition',
-                style: TextStyle(
-                  color: Colors.white60,
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.0,
                 ),
-              ),
-            ),
-          ),
-        ],
+
+                const SizedBox(height: 28),
+
+                // 2. Elegant Tagline Motion
+                Opacity(
+                  opacity: _taglineOpacity.value,
+                  child: Column(
+                    children: [
+                      Text(
+                        'ACCESS',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 4.5,
+                          color: isDark ? Colors.white : const Color(0xFF0F172A),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        AppSettings.isArabic
+                            ? 'بطاقات الأعمال الذكية • Smart Cards'
+                            : 'Smart Digital Business Cards',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? Colors.white54 : const Color(0xFF64748B),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
