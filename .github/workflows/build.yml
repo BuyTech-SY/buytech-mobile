@@ -30,12 +30,10 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Configure Android Scaffolding
+      - name: Configure Android Scaffolding & Branding
         run: |
-          flutter create --platforms=android --org com.buytech --project-name buytech_flutter .
-
-      - name: Add NFC Permissions
-        run: |
+          flutter create --platforms=android --org com.access --project-name buytech_flutter .
+          sed -i 's/android:label="buytech_flutter"/android:label="Access"/g' android/app/src/main/AndroidManifest.xml
           sed -i '/<application/i <uses-permission android:name="android.permission.INTERNET"/>\n<uses-permission android:name="android.permission.NFC"/>\n<uses-feature android:name="android.hardware.nfc" android:required="false"/>\n<uses-permission android:name="android.permission.CAMERA"/>' android/app/src/main/AndroidManifest.xml
 
       - name: Install dependencies
@@ -44,17 +42,25 @@ jobs:
       - name: Build Release APK
         run: flutter build apk --release --no-tree-shake-icons
 
+      - name: Prepare Release APKs
+        run: |
+          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/access.apk
+          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/buytech.apk
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: buytech-app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: access-app-release
+          path: build/app/outputs/flutter-apk/access.apk
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.0
-          name: "BuyTech Mobile v1.0.0"
-          body: "Official Native Flutter Release APK for BuyTech Mobile App"
-          files: build/app/outputs/flutter-apk/app-release.apk
+          tag_name: v2.0.0
+          name: "Access Cards v2.0.0 (Blinq Edition)"
+          body: "Official Native Flutter Release APK for Access Smart Digital Cards (Blinq Edition)"
+          files: |
+            build/app/outputs/flutter-apk/access.apk
+            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/flutter-apk/buytech.apk
         continue-on-error: true

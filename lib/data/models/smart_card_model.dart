@@ -55,7 +55,7 @@ class SmartCardModel {
       name: json['name'] as String? ?? '',
       slug: json['slug'] as String? ?? '',
       title: json['title'] as String?,
-      companyName: json['company_name'] as String? ?? 'BuyTech',
+      companyName: json['company_name'] as String? ?? 'Access',
       bio: json['bio'] as String?,
       avatar: json['avatar'] as String?,
       coverImage: json['cover_image'] as String?,

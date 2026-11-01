@@ -27,7 +27,7 @@ class LeadModel {
       email: json['email'] as String?,
       company: json['company'] as String?,
       notes: json['notes'] as String?,
-      cardName: json['smart_card']?['name'] as String? ?? 'BuyTech',
+      cardName: json['smart_card']?['name'] as String? ?? 'Access',
       createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'] as String) : null,
     );
   }

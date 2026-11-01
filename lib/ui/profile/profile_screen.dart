@@ -39,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('تسجيل الخروج', style: TextStyle(fontWeight: FontWeight.w900)),
-        content: const Text('هل أنت متأكد من رغبتك في تسجيل الخروج من تطبيق BuyTech؟'),
+        content: const Text('هل أنت متأكد من رغبتك في تسجيل الخروج من تطبيق Access؟'),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         actions: [
           TextButton(
@@ -129,7 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              _user?.name ?? 'مستخدم BuyTech',
+                              _user?.name ?? 'مستخدم Access',
                               style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 17),
                             ),
                             const SizedBox(height: 2),

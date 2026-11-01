@@ -11,7 +11,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController(text: 'admin@buytech.com');
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
@@ -101,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // Title & Subtitle
                   Text(
-                    'BuyTech Operations',
+                    'Access Cards',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 26,
@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'نظام إدارة البطاقات الذكية والمبيعات والعمليات',
+                    'نظام بطاقات الأعمال الذكية ورموز الـ QR و NFC',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 13,
@@ -167,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     textDirection: TextDirection.ltr,
                     textAlign: TextAlign.right,
                     decoration: InputDecoration(
-                      hintText: 'name@buytech.app',
+                      hintText: 'name@company.com',
                       prefixIcon: const Icon(Icons.email_outlined, color: AppColors.primary, size: 20),
                       filled: true,
                       fillColor: isDark ? AppColors.darkSurface : const Color(0xFFF1F5F9),

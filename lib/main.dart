@@ -8,17 +8,17 @@ import 'ui/dashboard/dashboard_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final isLoggedIn = await StorageService.isLoggedIn();
-  runApp(BuyTechApp(isLoggedIn: isLoggedIn));
+  runApp(AccessApp(isLoggedIn: isLoggedIn));
 }
 
-class BuyTechApp extends StatelessWidget {
+class AccessApp extends StatelessWidget {
   final bool isLoggedIn;
-  const BuyTechApp({super.key, required this.isLoggedIn});
+  const AccessApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'BuyTech Operations',
+      title: 'Access Cards',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

@@ -84,7 +84,7 @@ class _LeadsCrmScreenState extends State<LeadsCrmScreen> {
       cleanPhone = '+963${cleanPhone.substring(1)}';
     }
 
-    final greeting = 'مرحباً $name، يسعدنا التواصل معك من شركة BuyTech للحلول التقنية وأنظمة نقاط البيع.';
+    final greeting = 'مرحباً $name، يسعدنا التواصل معك من طرف نظام البطاقات الذكية Access.';
     final url = Uri.parse('https://wa.me/$cleanPhone?text=${Uri.encodeComponent(greeting)}');
 
     if (await canLaunchUrl(url)) {
@@ -113,10 +113,10 @@ class _LeadsCrmScreenState extends State<LeadsCrmScreen> {
 
   void _shareLead(LeadModel lead) {
     final text = '''
-عميل جديد من BuyTech Smart Cards:
+جهة اتصال جديدة من Access Smart Cards:
 الاسم: ${lead.name}
 الهاتف: ${lead.phone}
-${lead.company != null ? 'الشركة: ${lead.company}\n' : ''}${lead.email != null ? 'البريد: ${lead.email}\n' : ''}${lead.notes != null ? 'ملاحظات: ${lead.notes}\n' : ''}البطاقة المصدر: ${lead.cardName ?? 'BuyTech'}
+${lead.company != null ? 'الشركة: ${lead.company}\n' : ''}${lead.email != null ? 'البريد: ${lead.email}\n' : ''}${lead.notes != null ? 'ملاحظات: ${lead.notes}\n' : ''}البطاقة المصدر: ${lead.cardName ?? 'Access'}
 ''';
     Share.share(text, subject: 'بيانات العميل ${lead.name}');
   }
@@ -129,7 +129,7 @@ ${lead.company != null ? 'الشركة: ${lead.company}\n' : ''}${lead.email != 
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'إدارة العملاء المكتسبين (Leads CRM)',
+          'المعارف والعملاء (Contacts)',
           style: TextStyle(fontWeight: FontWeight.w900, fontSize: 17),
         ),
         actions: [

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../smart_cards/smart_cards_screen.dart';
+import '../scanner/qr_scanner_screen.dart';
 import '../leads/leads_crm_screen.dart';
-import '../products/products_screen.dart';
 import '../profile/profile_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -18,8 +18,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   final List<Widget> _screens = const [
     SmartCardsScreen(),
+    QrScannerScreen(),
     LeadsCrmScreen(),
-    ProductsScreen(),
     ProfileScreen(),
   ];
 
@@ -67,23 +67,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
             destinations: const [
               NavigationDestination(
                 icon: Icon(Icons.credit_card_outlined),
-                selectedIcon: Icon(Icons.credit_card, color: AppColors.primary),
-                label: 'البطاقات',
+                selectedIcon: Icon(Icons.credit_card_rounded, color: AppColors.primary),
+                label: 'بطاقاتي',
               ),
               NavigationDestination(
-                icon: Icon(Icons.people_outline),
-                selectedIcon: Icon(Icons.people, color: AppColors.primary),
-                label: 'العملاء (CRM)',
+                icon: Icon(Icons.qr_code_scanner_outlined),
+                selectedIcon: Icon(Icons.qr_code_scanner_rounded, color: AppColors.primary),
+                label: 'الماسح',
               ),
               NavigationDestination(
-                icon: Icon(Icons.inventory_2_outlined),
-                selectedIcon: Icon(Icons.inventory_2, color: AppColors.primary),
-                label: 'المنتجات',
+                icon: Icon(Icons.contacts_outlined),
+                selectedIcon: Icon(Icons.contacts_rounded, color: AppColors.primary),
+                label: 'المعارف',
               ),
               NavigationDestination(
-                icon: Icon(Icons.person_outline),
-                selectedIcon: Icon(Icons.person, color: AppColors.primary),
-                label: 'حسابي',
+                icon: Icon(Icons.person_outline_rounded),
+                selectedIcon: Icon(Icons.person_rounded, color: AppColors.primary),
+                label: 'الإعدادات',
               ),
             ],
           ),

@@ -4,7 +4,6 @@ import '../../core/constants/api_constants.dart';
 import '../models/user_model.dart';
 import '../models/smart_card_model.dart';
 import '../models/lead_model.dart';
-import '../models/product_model.dart';
 import 'storage_service.dart';
 
 class ApiService {
@@ -21,7 +20,7 @@ class ApiService {
         body: jsonEncode({
           'email': email,
           'password': password,
-          'device_name': deviceName ?? 'BuyTech Flutter App',
+          'device_name': deviceName ?? 'Access Mobile App',
         }),
       ).timeout(const Duration(seconds: 15));
 
@@ -77,6 +76,44 @@ class ApiService {
     }
   }
 
+  // Create Smart Card
+  static Future<Map<String, dynamic>> createSmartCard(Map<String, dynamic> cardData) async {
+    final token = await StorageService.getToken();
+    try {
+      final res = await http.post(
+        Uri.parse(ApiConstants.smartCards),
+        headers: ApiConstants.headers(token: token),
+        body: jsonEncode(cardData),
+      );
+      final data = jsonDecode(res.body) as Map<String, dynamic>;
+      if ((res.statusCode == 200 || res.statusCode == 201) && data['success'] == true) {
+        return {
+          'success': true,
+          'card': SmartCardModel.fromJson(data['card'] as Map<String, dynamic>),
+          'message': data['message'] ?? 'تم إنشاء البطاقة بنجاح',
+        };
+      }
+      return {'success': false, 'message': data['message'] ?? 'فشل إنشاء البطاقة'};
+    } catch (e) {
+      return {'success': false, 'message': 'خطأ في الاتصال بالخادم'};
+    }
+  }
+
+  // Delete Smart Card
+  static Future<bool> deleteSmartCard(int cardId) async {
+    final token = await StorageService.getToken();
+    try {
+      final res = await http.delete(
+        Uri.parse('${ApiConstants.smartCards}/$cardId'),
+        headers: ApiConstants.headers(token: token),
+      );
+      final data = jsonDecode(res.body);
+      return data['success'] == true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   // Fetch Captured Leads CRM
   static Future<List<LeadModel>> getLeads() async {
     final token = await StorageService.getToken();
@@ -94,60 +131,6 @@ class ApiService {
       return [];
     } catch (_) {
       return [];
-    }
-  }
-
-  // Fetch Products Catalog
-  static Future<List<ProductModel>> getProducts({String? search, String? category}) async {
-    final token = await StorageService.getToken();
-    try {
-      var uri = Uri.parse(ApiConstants.products);
-      final queryParams = <String, String>{};
-      if (search != null && search.isNotEmpty) queryParams['search'] = search;
-      if (category != null && category.isNotEmpty) queryParams['category'] = category;
-      if (queryParams.isNotEmpty) {
-        uri = uri.replace(queryParameters: queryParams);
-      }
-
-      final res = await http.get(
-        uri,
-        headers: ApiConstants.headers(token: token),
-      );
-      final data = jsonDecode(res.body);
-      if (data['success'] == true && data['products']?['data'] != null) {
-        return (data['products']['data'] as List)
-            .map((i) => ProductModel.fromJson(i as Map<String, dynamic>))
-            .toList();
-      }
-      return [];
-    } catch (_) {
-      return [];
-    }
-  }
-
-  // Submit Quote to Server
-  static Future<bool> submitQuote({
-    required List<Map<String, dynamic>> items,
-    String? customerName,
-    String? customerPhone,
-    String? notes,
-  }) async {
-    final token = await StorageService.getToken();
-    try {
-      final res = await http.post(
-        Uri.parse(ApiConstants.quotes),
-        headers: ApiConstants.headers(token: token),
-        body: jsonEncode({
-          'items': items,
-          'customer_name': customerName,
-          'customer_phone': customerPhone,
-          'notes': notes,
-        }),
-      );
-      final data = jsonDecode(res.body);
-      return data['success'] == true;
-    } catch (_) {
-      return false;
     }
   }
 
