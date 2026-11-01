@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>BuyTech</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>buytech_flutter</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+
+	<!-- NFC Permissions & Descriptions -->
+	<key>NFCReaderUsageDescription</key>
+	<string>يستخدم التطبيق تقنية NFC لكتابة وقراءة بطاقات الأعمال الذكية لشركة BuyTech ومزامنتها على الفور.</string>
+	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
+	<array>
+		<string>D2760000850101</string>
+	</array>
+
+	<!-- Camera for QR Code Scanner -->
+	<key>NSCameraUsageDescription</key>
+	<string>يستخدم التطبيق الكاميرا لمسح رموز QR لبطاقات العمل والمنتجات لتسهيل تبادل جهات الاتصال.</string>
+
+	<!-- Contacts / Share -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>لحفظ ومشاركة رموز QR للبطاقات الذكية كصور في ألبوم الهاتف.</string>
+
+	<!-- URL Schemes for External Launchers (WhatsApp, Phone) -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>whatsapp</string>
+		<string>tel</string>
+		<string>mailto</string>
+		<string>https</string>
+	</array>
+</dict>
+</plist>
