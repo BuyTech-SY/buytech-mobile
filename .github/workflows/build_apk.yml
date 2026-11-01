@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target Environment'
+        default: 'production'
 
 permissions:
   contents: write
@@ -28,11 +32,11 @@ jobs:
       - name: Set up Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.x'
+          flutter-version: '3.24.x'
           channel: 'stable'
           cache: true
 
-      - name: Ensure Android Platform Scaffolding
+      - name: Configure Android Platform Scaffolding
         run: |
           flutter create --platforms=android --org com.buytech .
           python3 -c "
@@ -69,7 +73,7 @@ jobs:
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.0-${{ github.run_number }}
+          tag_name: v1.0.0-build-${{ github.run_number }}
           name: BuyTech Mobile v1.0.0 (Build ${{ github.run_number }})
           body: |
             ## 📱 تطبيق BuyTech الرسمي للأندرويد
