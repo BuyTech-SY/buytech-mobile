@@ -30,11 +30,38 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Configure Android Scaffolding & Branding
+      - name: Configure Android Scaffolding, App Launcher Icons & Branding
         run: |
           flutter create --platforms=android --org com.access --project-name buytech_flutter .
           sed -i 's/android:label="buytech_flutter"/android:label="Access"/g' android/app/src/main/AndroidManifest.xml
           sed -i '/<application/i <uses-permission android:name="android.permission.INTERNET"/>\n<uses-permission android:name="android.permission.NFC"/>\n<uses-feature android:name="android.hardware.nfc" android:required="false"/>\n<uses-permission android:name="android.permission.CAMERA"/>' android/app/src/main/AndroidManifest.xml
+          pip install pillow
+          python3 -c "
+          import os, shutil
+          from PIL import Image
+          src = 'assets/images/icon-dark.png'
+          if not os.path.exists(src):
+              src = 'assets/images/access-logo.png'
+          img = Image.open(src).convert('RGBA')
+          sizes = {
+              'mipmap-mdpi': 48,
+              'mipmap-hdpi': 72,
+              'mipmap-xhdpi': 96,
+              'mipmap-xxhdpi': 144,
+              'mipmap-xxxhdpi': 192,
+          }
+          for folder, size in sizes.items():
+              target_dir = os.path.join('android', 'app', 'src', 'main', 'res', folder)
+              os.makedirs(target_dir, exist_ok=True)
+              resized = img.resize((size, size), Image.Resampling.LANCZOS)
+              resized.save(os.path.join(target_dir, 'ic_launcher.png'), 'PNG')
+              resized.save(os.path.join(target_dir, 'ic_launcher_round.png'), 'PNG')
+              resized.save(os.path.join(target_dir, 'ic_launcher_foreground.png'), 'PNG')
+          anydpi = os.path.join('android', 'app', 'src', 'main', 'res', 'mipmap-anydpi-v26')
+          if os.path.exists(anydpi):
+              shutil.rmtree(anydpi)
+          print('Successfully generated all Access app launcher icons!')
+          "
 
       - name: Install dependencies
         run: flutter pub get
@@ -56,9 +83,9 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.1.0
-          name: "Access Cards v2.1.0 (Blinq Pro Edition)"
-          body: "Official Native Flutter Release APK for Access Smart Digital Cards (Blinq Pro Edition with Dark Mode, Bilingual AR/EN, Animated Intro, Card Editor, Avatar & Cover styles, and Subscriptions)"
+          tag_name: v2.2.0
+          name: "Access Cards v2.2.0 (Blinq Edition)"
+          body: "Official Native Flutter Release APK for Access Smart Digital Cards (Custom Launcher Icon, Instant Launch without Intro delay, Camera Privacy Dot removed, Elevated Card Design)"
           files: |
             build/app/outputs/flutter-apk/access.apk
             build/app/outputs/flutter-apk/app-release.apk

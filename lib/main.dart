@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/theme/app_theme.dart';
 import 'core/state/app_settings.dart';
-import 'ui/intro/splash_screen.dart';
+import 'data/services/storage_service.dart';
+import 'ui/dashboard/dashboard_screen.dart';
+import 'ui/auth/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AppSettings.init();
-  runApp(const AccessApp());
+  final isLoggedIn = await StorageService.isLoggedIn();
+  runApp(AccessApp(isLoggedIn: isLoggedIn));
 }
 
 class AccessApp extends StatelessWidget {
-  const AccessApp({super.key});
+  final bool isLoggedIn;
+  const AccessApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,7 @@ class AccessApp extends StatelessWidget {
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              home: const SplashScreen(),
+              home: isLoggedIn ? const DashboardScreen() : const LoginScreen(),
             );
           },
         );

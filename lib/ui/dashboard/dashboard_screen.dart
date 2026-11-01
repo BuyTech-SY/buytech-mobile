@@ -17,13 +17,6 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   late int _currentIndex;
 
-  final List<Widget> _screens = const [
-    SmartCardsScreen(),
-    QrScannerScreen(),
-    LeadsCrmScreen(),
-    ProfileScreen(),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -37,7 +30,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        children: _screens,
+        children: [
+          const SmartCardsScreen(),
+          _currentIndex == 1 ? const QrScannerScreen() : const SizedBox.shrink(),
+          const LeadsCrmScreen(),
+          const ProfileScreen(),
+        ],
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
