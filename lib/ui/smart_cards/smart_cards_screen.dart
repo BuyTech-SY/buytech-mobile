@@ -378,11 +378,11 @@ class _SmartCardsScreenState extends State<SmartCardsScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
                               color: card.isActive
-                                  ? Colors.emerald.withOpacity(0.35)
+                                  ? const Color(0xFF10B981).withOpacity(0.35)
                                   : Colors.red.withOpacity(0.35),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: card.isActive ? Colors.emeraldAccent : Colors.redAccent,
+                                color: card.isActive ? const Color(0xFF34D399) : Colors.redAccent,
                                 width: 1,
                               ),
                             ),
